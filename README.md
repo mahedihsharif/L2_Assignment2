@@ -1,28 +1,105 @@
 **1. What is PostgreSQL?**
-Answer: PostgreSQL হল একটি শক্তিশালী, open-source, object-relational database management system. এটি ডেটা সংরক্ষণ, পরিচালনা এবং পুনরুদ্ধার করার জন্য ব্যবহৃত হয়। এটি ACID প্রপার্টি  Atomicity, Consistency, Isolation, Durability রুলস অনুসরণ করে, যার মানে হলো এটি অনেক বেশি নির্ভরযোগ্য এবং নিরাপদ।
+**Answer:** PostgreSQL হল একটি শক্তিশালী, open-source, object-relational database management system. এটি ডেটা সংরক্ষণ, পরিচালনা এবং পুনরুদ্ধার করার জন্য ব্যবহৃত হয়।
+এটি ACID প্রপার্টি  Atomicity, Consistency, Isolation, Durability রুলস অনুসরণ করে, যার মানে হলো এটি অনেক বেশি নির্ভরযোগ্য এবং নিরাপদ।
 এটি Oracle, MySQL, SQL Server-এর মতোই একটি RDBMS, কিন্তু অনেক বেশি feature-rich এবং customizable.
 
-ডিটেইলস এর বর্ননা করছিঃ
+**ডিটেইলস এর বর্ননা করছিঃ**
 ধরি, আপনি একটি Bookstore Website বানাচ্ছেন যেখানে বিভিন্ন বইয়ের তথ্য সংরক্ষণ করতে হবে।
 PostgreSQL এর টেবিল তৈরি করা যাকঃ
 
-CREATE TABLE books (
+`CREATE TABLE books (
     id SERIAL PRIMARY KEY,
     title VARCHAR(100),
     author VARCHAR(100),
     price DECIMAL(6, 2),
     published_date DATE
-);
+);`
 
-books নামের একটি টেবিল বানানো হয়েছে।
+books নামের একটি টেবিল বানানো হয়েছে, প্রতিটি বইয়ের একটি id, title, author, price এবং published_date আছে।
 
-প্রতিটি বইয়ের একটি id, title, author, price এবং published_date আছে।
-
-কিছু বই টেবিলে এর মধ্য ইন্সার্ট করলামঃ 
-INSERT INTO books (title, author, price, published_date)
-VALUES ('Think Like a Monk', 'Jay Shetty', 15.99, '2020-09-08');
+**কিছু বই টেবিলে এর মধ্য ইন্সার্ট করলামঃ**
+`INSERT INTO books (title, author, price, published_date)
+VALUES ('Think Like a Monk', 'Jay Shetty', 15.99, '2020-09-08');`
 
 সব বই দেখার কোয়েরিঃ
-SELECT * FROM books;
+`SELECT * FROM books;`
 
 এইভাবে ডিলেট, আপডেটও করা যায়।
+
+
+
+**2. What is the purpose of a database schema in PostgreSQL?**
+**Answer:** PostgreSQL এ Database Schema এর উদ্দেশ্য কী নিচে তা সুন্দর করে বর্ননা করা হলোঃ
+Schema হল একটি কাঠামো বা গঠন যেখানে আপনি টেবিল, ভিউ, ফাংশন, ইনডেক্স ইত্যাদি গুচ্ছভাবে সংগঠিত করে রাখতে পারেন। এটি PostgreSQL এ ডেটাবেইসকে সুন্দর ভাবে সংগঠিত এবং পৃথকভাবে পরিচালনা করার সুযোগ দেয়।
+
+আরো সহজভাবে যদি বুজিয়ে বলিঃ 
+ধরি, আপনি একটি University Management System তৈরি করছেন। সেখানে ৩টি আলাদা ডিপার্টমেন্ট আছে: Science, arts, commerce সব ডিপার্টমেন্টে students নামে টেবিল আছে।
+
+যদি আপনি Schema ব্যবহার না করেন, তাহলে একই নামের টেবিল students ৩ বার তৈরি করা যাবে না। কিন্তু Schema ব্যবহার করলে আপনি আলাদা আলাদা students টেবিল রাখতে পারবেন এইভাবে: science.students
+arts.students commerce.students
+
+এটি সম্ভব হয়েছে কারণ প্রতিটি Schema আলাদা namespace তৈরি করে।
+
+PostgreSQL Schema ব্যবহারের উদ্দেশ্য: 
+1. ডেটাবেইসের টেবিল, ফাংশন, ভিউ ইত্যাদি গ্রুপ করে রাখা যায়।
+2. প্রতিটি Schema-এর আলাদা Permission সেট করা যায়।
+3. একই ডেটাবেসে একই নামের টেবিল/ভিউ রাখা সম্ভব হয়।
+4. এক ডেটাবেজে একাধিক ক্লায়েন্টের ডেটা আলাদা আলাদা Schema-তে রাখা যায়।
+
+Schema তৈরি:
+`CREATE SCHEMA sales;`
+
+ Schema-এর মধ্যে টেবিল তৈরি:
+`CREATE TABLE sales.customers (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100),
+    email VARCHAR(100)
+);`
+
+ডেটা ইনসার্ট করা:
+`INSERT INTO sales.customers (name, email)
+VALUES ('Rahim', 'rahim@example.com');`
+
+ডাটা দেখার SCHEMA
+`SELECT * FROM sales.customers;`
+
+
+3. Explain the Primary Key and Foreign Key concepts in PostgreSQL?
+   Answer: PostgreSQL এ Primary Key এবং Foreign Key এই দুটি খুব গুরুত্বপূর্ণ ধারণা, বিশেষ করে ডেটাবেজ ডিজাইনে, নিচে বিস্তারিত আলোচনা করছি:
+
+ **Primary Key কীঃ**
+ Primary Key হল এক বা একাধিক কলামের সমন্বয়ে গঠিত একটি constraint যা টেবিলের প্রতিটি row কে অন্য record থেকে আলাদা করে। এটি অবশ্যই ইউনিক হবে এবং null হওয়া চলবে না।
+
+Primary Key --> Unique হয়, NULL value রাখা যায় না, প্রতিটি টেবিলে মাত্র একটি Primary Key থাকতে পারে,
+
+**উদাহরণ:**
+`CREATE TABLE students (
+    student_id SERIAL PRIMARY KEY,
+    name VARCHAR(100),
+    department VARCHAR(50)
+);`
+
+
+এখানে student_id কলামটি Primary Key, যার মানে হল প্রতিটি ছাত্রের একটি ইউনিক ID থাকবে এবং এই কলামে কখনো NULL value আসতে পারবে না।
+
+**Foreign Key কীঃ**
+Foreign Key হল এমন একটি কলাম যা অন্য একটি টেবিলের Primary Key কে রেফারেন্স করে। এটি দুইটি টেবিলের মধ্যে সম্পর্ক তৈরি করে।
+
+উদ্দেশ্য:
+দুটি টেবিলের মধ্যে রিলেশন তৈরি করা, ডেটা কনসিস্টেন্সি নিশ্চিত করা, এটি অন্য টেবিলের Primary Key বা Unique Key রেফার করে, ডেটা integrity রক্ষা করে, NULL থাকতে পারে
+
+উদাহরণ:
+CREATE TABLE students (
+    student_id SERIAL PRIMARY KEY,
+    name VARCHAR(100)
+);
+
+
+CREATE TABLE results (
+    result_id SERIAL PRIMARY KEY,
+    student_id INT REFERENCES students(student_id),
+    marks INT
+);
+
+এখানে results টেবিলের student_id কলামটি students টেবিলের student_id কে রেফার করছে। যে student_id গুলো students টেবিলে আছে, কেবল সেগুলোই results টেবিলে থাকতে পারবে।
+
