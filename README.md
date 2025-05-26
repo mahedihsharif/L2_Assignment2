@@ -1,4 +1,4 @@
-##**1. What is PostgreSQL?** <br>
+## **1. What is PostgreSQL?** <br>
 **Answer:**<br> PostgreSQL হল একটি শক্তিশালী, open-source, object-relational database management system. এটি ডেটা সংরক্ষণ, পরিচালনা এবং পুনরুদ্ধার করার জন্য ব্যবহৃত হয়।
 এটি ACID প্রপার্টি  Atomicity, Consistency, Isolation, Durability রুলস অনুসরণ করে, যার মানে হলো এটি অনেক বেশি নির্ভরযোগ্য এবং নিরাপদ।
 এটি Oracle, MySQL, SQL Server-এর মতোই একটি RDBMS, কিন্তু অনেক বেশি feature-rich এবং customizable.
